@@ -6,12 +6,13 @@ import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 
 public interface StudentRepository extends CrudRepository<Student, Long>{
-	List<Student> findByName(String name);
-	List<Student> findByTutelagem(boolean tutelagem);
-	Student findByRegistry(String registry);
+	//List<Student> findByName(String name);
+	//List<Student> findByTutelagem(boolean tutelagem);
+	List<Student> findAll();
+	Student findByMatricula(String matricula);
 	Optional<Student> findById(Long id);
-	Student findByRegistryOrEmail(String registry, String email);
+	Student findByMatriculaOrEmail(String matricula, String email);
 	Student findByEmail(String email);
-	Boolean existsByRegistry(String registry);
+	Boolean existsByMatricula(String matricula);
 	Boolean existsByEmail(String email);
 }

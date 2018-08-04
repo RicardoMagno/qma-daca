@@ -2,6 +2,7 @@ package com.ufcg.qmadaca;
 
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,61 +18,45 @@ public class StudentService {
 	StudentRepository sr;
 	
 	@Transactional
-	public void cadastrarAluno(String nome, String matricula, int codigoCurso, String telefone, String email) {
-		Student entity = new Student();
-		entity.setRegistry(matricula);
-		entity.setName(nome);
-		entity.setCode(codigoCurso);
-		entity.setPhone(telefone);
-		entity.setEmail(email);
+	public void cadastrarAluno(String nome, String matricula, String codigoCurso, String telefone, String email, String senha) {
+		Student entity = new Student(matricula, codigoCurso, nome, email, senha, telefone);
+		//student.setRoles(Collections.singleton(Role.ROLE_STUDENT));
 		sr.save(entity);
 	}
-	@Transactional
-	public List<Student> recuperaAluno(String matricula) {
-		return sr.findByRegistry(matricula);
+
+	
+	public List<Student> listarAlunos() {
+		List<Student> students = (List<Student>) sr.findAll();
+		return students;
 	}
-//	@Transactional
-//	public String listarAlunos() {
-//		Iterable<Student> alunos = sr.findAll();
-//		Iterator<Student> iterator = alunos.iterator();
-//		List<String> list = new ArrayList<String>();
-//		while(iterator.hasNext()) {
-//			adicionarCorreto(list, iterator.next());			
-//		}
-//		return listaAlunos;
-//	}
-//	private void adicionarCorreto(List<String> list, Student next) {
-//		if(list.isEmpty()) {
-//			list.add(next.toString());
-//		}	
-//	}
+				
+
+	@Transactional
+	public Student recuperaAluno(String matricula) {
+		try {
+		Student student = sr.findByMatricula(matricula);
+		return sr.findByMatricula(matricula);
+		}
+		catch(StudentNotFoundException ex) {
+            throw ex;	
+		}
+	}
+
+    public void removeById(Long id) {
+        sr.deleteById(id);
+    }
+
+    public Boolean matriculaUnica(String matricula) {
+        return sr.existsByMatricula(matricula);
+    }
+
+    public Boolean emailUnico(String email) {
+        return sr.existsByEmail(email);
+    }
+    
 	@Transactional
 	public String getInfoAluno(String matricula, String atributo) {
-		return sr.findByRegistry(matricula).toString();
+		return sr.findByMatricula(matricula).toString();
 	}
-	@Transactional
-	public void tornarTutor(String matricula, String disciplina, int proficiencia) {
-		Student entity = sr.findByRegistry(matricula);
-		entity.setTutelagem(true);
-		entity.setClass(disciplina);
-		entity.setMastery(proficiencia);
-		sr.save(entity);
-	}
-	 @Transactional
-	 public String recuperaTutor(String matricula) {
-		 return recuperaAluno(matricula);
-	 }
-	 @Transactional
-	 public String listarTutores() {
-		 RETURNS_DEEP_STUBS sr.
-	 }
-	 //void cadastrarHorario(String email, String horario, String dia)
-	 //void cadastrarLocalDeAtendimento(String email, String local)
-	 //boolean consultaHorario(String email, String horario, String dia)
-	 //boolean consultaLocal(String email, String local)
-	 //int pedirAjudaPresencial (String matrAluno, String disciplina, String horario, String dia, String localInteresse)
-	 // int pedirAjudaOnline (String matrAluno, String disciplina)
-	 //String pegarTutor(int idAjuda)
-	 //String getInfoAjuda(int idAjuda, String atributo)
-	
+
 }

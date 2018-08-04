@@ -1,81 +1,116 @@
 package com.ufcg.qmadaca;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Student {
-	@Id
-	public Long id;
 	
+	@ManyToOne
+	private Set<Tutor> tutores;
+	 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	
+	@NotBlank
 	@Column
-	public String registry;
+	private String matricula;
 	//TODO: impossivel ter nomes vazios ou em branco
 	@Column
-	public String name;
+	private String nome;
+	
+	@Size(min = 11, max = 13)
+	@Column
+	private String telefone;
 	
 	@Column
-	public String phone;
-	@Column
-	public int courseCode;
-	//TODO: email deve ser obrigatorio e valido()um arroba e algo antes e depois do @
-	@Column
-	public String email;
-	//TODO aluno possui uma nota de avaliação (entre 0 e 5), inicialmente 5
-	@Column
-	public int grade;
+	private String codigoCurso;
 	
+	@Email
 	@Column
-	public boolean tutelagem;
+	private String email;
+
+	@JsonIgnore
+	@NotBlank
+	private String senha;
 	
+	@Min(0)
+	@Max(5)
 	@Column
-	public int proficiencia;
+	private int nota = 5;
 	
-	@Column
-	public String disciplina;
-	
-	
-	public String getRegistry() {
-		return registry;
+    public Student(String matricula , String codigoCurso, String nome, String email, String senha, String telefone) {
+	 this.matricula = matricula;
+	 this.codigoCurso = codigoCurso;
+	 this.nome = nome;
+	 this.email = email;
+	 this.senha = senha;
+	 this.telefone = telefone;
+	 this.tutores = new HashSet<>();
 	}
-	public void setRegistry(String registry) {
-		this.registry = registry;
+	
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+	public String getMatricula() {
+		return matricula;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setMatricula(String matricula) {
+		this.matricula = matricula;
 	}
-	public void setCode(int courseCode) {
-		this.courseCode = courseCode;
+	@NotBlank
+	public String getNome() {
+		return nome;
 	}
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getCode() {
+		return codigoCurso;
+	}
+	public void setCode(String codigoCurso) {
+		this.codigoCurso = codigoCurso;
+	}
+	public String getTelefone() {
+		return telefone;
+	}
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+	public String getEmail() {
+		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	
-    @Override
-    public String toString() {
-    	if(phone.isEmpty()) {
-    		return registry + " - " + name + " - " + courseCode + " - " + email;
-    	}
-    	else {
-    		return registry + " - " + name + " - " + courseCode + " - "+ phone + " - " + email;
-    	}
-    }
-  //Como sistema, deve ser possível cadastrar alunos para que os mesmos fiquem registrados e possam ser recuperados pela matrícula.
-	public void setTutelagem(boolean tutelar) {
-		this.tutelagem = tutelar;		
+	public String getSenha() {
+		return senha;
 	}
-	public void setClass(String disciplina2) {
-		this.disciplina = disciplina2;
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
-	public void setMastery(int proficiencia2) {
-		this.proficiencia = proficiencia2;		
+	public int getNota() {
+	    return nota;
 	}
-
-  //Na listagem de alunos, deve ser exibido um aluno por linha, ordenados a partir do nome.
-
+	public void setNota(int nota) {
+	    this.nota = nota;
+	}
 }
