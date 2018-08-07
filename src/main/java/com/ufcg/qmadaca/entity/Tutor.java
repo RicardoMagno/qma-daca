@@ -1,19 +1,23 @@
-package com.ufcg.qmadaca;
-
-import java.util.Set;
+package com.ufcg.qmadaca.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 @Entity
-public class Tutor {
+@Table(name = "tutors")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Tutor extends Student{
 
-   private Set<Student> alunos;
+   //private Set<Student> alunos;
    
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,17 +25,17 @@ public class Tutor {
 	
 	@Column
 	public int proficiencia;
+	
 	@Column
 	public String disciplina;
-	private Student aluno;
 	
 	@Min(0)
 	@Max(5)
 	@Column
 	private int nota = 5;
-	
-	public Tutor(Student aluno, String disciplina, int proficiencia) {
-        this.aluno = aluno;
+
+	public Tutor(String matricula , String codigoCurso, String nome, String email, String senha, String telefone, String disciplina, int proficiencia) {
+		super( matricula,  codigoCurso, nome, email, senha, telefone);
         this.disciplina = disciplina;
         this.proficiencia = proficiencia;
 	}
@@ -55,11 +59,10 @@ public class Tutor {
 	public void setDisciplina(String disciplina) {
 		this.disciplina = disciplina;
 	}
-	public int getMastery(int proficiencia) {
+	public int getMastery() {
 		return proficiencia;		
 	}
 	public void setMastery(int proficiencia) {
 		this.proficiencia = proficiencia;		
 	}
-
 }
